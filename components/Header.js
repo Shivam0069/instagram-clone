@@ -1,9 +1,12 @@
 import Image from "next/legacy/image";
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { modalState } from "../pages/_app";
 export default function Header() {
   const { data: session } = useSession();
-  console.log(session);
+  const [isOpen, setIsOpen] = useRecoilState(modalState);
+ 
   return (
     <div className="sticky top-0  bg-white shadow-sm border-b z-30">
       <div className="flex items-center justify-between max-w-6xl mx-4 xl:mx-auto">
@@ -64,6 +67,7 @@ export default function Header() {
           {session ? (
             <>
               <svg
+                onClick={() => setIsOpen(true)}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -79,7 +83,7 @@ export default function Header() {
                 />
               </svg>
               <img
-              onClick={signOut}
+                onClick={signOut}
                 src={session.user.image}
                 alt="user-image"
                 className="h-10 rounded-full cursor-pointer"
