@@ -8,7 +8,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useRecoilState(modalState);
  
   return (
-    <div className="sticky top-0  bg-white shadow-sm border-b z-30">
+    <div  className="sticky top-0  bg-white shadow-sm border-b z-30">
       <div className="flex items-center justify-between max-w-6xl mx-4 xl:mx-auto">
         {/* Left */}
         <div className="cursor-pointer h-24 w-24 relative hidden lg:inline-grid">
@@ -67,7 +67,7 @@ export default function Header() {
           {session ? (
             <>
               <svg
-                onClick={() => setIsOpen(true)}
+                onClick={() => setIsOpen((prev)=>!prev)}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
