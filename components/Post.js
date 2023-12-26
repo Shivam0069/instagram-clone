@@ -46,7 +46,7 @@ export default function Post({ img, userImg, username, caption, id }) {
     );
   }, [db]);
   useEffect(() => {
-    setHasLiked(likes.findIndex((like) => like.id === session.user.uid) !== -1);
+    setHasLiked(likes.findIndex((like) => like.id === session?.user.uid) !== -1);
   }, [likes]);
   async function likePost() {
     if (hasLiked) {
@@ -131,7 +131,6 @@ export default function Post({ img, userImg, username, caption, id }) {
                 />
               </svg>
             )}
-            
 
             {CommentIcon}
           </div>
@@ -140,12 +139,12 @@ export default function Post({ img, userImg, username, caption, id }) {
       )}
 
       {/* Post Comments */}
-      {caption.length > 0 && (
-        <p className="p-5 truncate ">
-          <span className="font-bold mr-2">{username}</span>
-          {caption}
-        </p>
-      )}
+
+      <p className="p-5 truncate ">
+        {likes.length > 0 && <p className="font-bold mb-1">{likes.length} likes</p>}
+        <span className="font-bold mr-2">{username}</span>
+        {caption}
+      </p>
 
       {/* Comments ... */}
       {comments.length > 0 && (
