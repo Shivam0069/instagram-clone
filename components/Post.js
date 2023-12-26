@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { BookMarkIcon, CommentIcon, HeartIcon, SmileyIcon } from "./SvgIcons";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export default function Post({ img, userImg, username, caption, id }) {
   const { data: session } = useSession();
+  const [comment, setComment] = useState("");
+  async function sendComment(e) {
+    e.preventDefault();
+    const commentToSend = comment;
+    setComment("");
+    await addDoc(collection(db, "posts", id, "comments"), {
+      comment: commentToSend,
+      username: session.user.username,
+      userImage: session.user.image,
+      timestamp: serverTimestamp(),
+    });
+  }
   return (
     <div className="bg-white my-7 border rounded-md">
       {/* Post Header */}
@@ -55,15 +69,18 @@ export default function Post({ img, userImg, username, caption, id }) {
 
       {/* Post Input Box */}
       {session && (
-        <form className="flex items-center p-4">
+        <form className="flex items-center p-4" onSubmit={sendComment}>
           {SmileyIcon}
           <input
             className="flex-1 border-none focus:ring-0"
             type="text"
             placeholder="Enter Your Comment..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
           />
           <button
-            className="text-blue-400 font-bo\
+            disabled={!comment.trim()}
+            className="text-blue-400 font-bold disabled:text-gray-500 disabled:cursor-not-allowed
         "
           >
             POST
