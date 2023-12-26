@@ -54,5 +54,9 @@ export default NextAuth({
       session.user.uid = token.sub;
       return session;
     },
+    async onError(error, context, req, res) {
+      console.error("NextAuth Error:", error);
+      return res.status(500).end(error.message);
+    },
   },
 });
