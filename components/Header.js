@@ -3,16 +3,19 @@ import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { modalState } from "../pages/_app";
+import { useRouter } from "next/router";
 export default function Header() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useRecoilState(modalState);
- 
+  const router = useRouter();
+
   return (
-    <div  className="sticky top-0  bg-white shadow-sm border-b z-30">
+    <div className="sticky top-0  bg-white shadow-sm border-b z-30">
       <div className="flex items-center justify-between max-w-6xl mx-4 xl:mx-auto">
         {/* Left */}
         <div className="cursor-pointer h-24 w-24 relative hidden lg:inline-grid">
           <Image
+            onClick={() => router.push("/")}
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMaJr0B21N0SLLrMF7rpIEc51oXfIxOTe4ZQ&usqp=CAU"
             layout="fill"
             className="object-contain"
@@ -20,6 +23,7 @@ export default function Header() {
         </div>
         <div className="cursor-pointer h-24 w-10 relative lg:hidden ">
           <Image
+            onClick={() => router.push("/")}
             src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg"
             layout="fill"
             className="object-contain"
@@ -55,6 +59,7 @@ export default function Header() {
 
         <div className="flex space-x-4 items-center">
           <svg
+            onClick={() => router.push("/")}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
@@ -67,7 +72,7 @@ export default function Header() {
           {session ? (
             <>
               <svg
-                onClick={() => setIsOpen((prev)=>!prev)}
+                onClick={() => setIsOpen((prev) => !prev)}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
