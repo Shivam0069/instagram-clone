@@ -46,7 +46,9 @@ export default function Post({ img, userImg, username, caption, id }) {
     );
   }, [db]);
   useEffect(() => {
-    setHasLiked(likes.findIndex((like) => like.id === session?.user.uid) !== -1);
+    setHasLiked(
+      likes.findIndex((like) => like.id === session?.user.uid) !== -1
+    );
   }, [likes]);
   async function likePost() {
     if (hasLiked) {
@@ -141,7 +143,9 @@ export default function Post({ img, userImg, username, caption, id }) {
       {/* Post Comments */}
 
       <p className="p-5 truncate ">
-        {likes.length > 0 && <p className="font-bold mb-1">{likes.length} likes</p>}
+        {likes.length > 0 && (
+          <p className="font-bold mb-1">{likes.length} likes</p>
+        )}
         <span className="font-bold mr-2">{username}</span>
         {caption}
       </p>
@@ -150,7 +154,10 @@ export default function Post({ img, userImg, username, caption, id }) {
       {comments.length > 0 && (
         <div className="mx-10 max-h-24 overflow-y-scroll scrollbar-none">
           {comments.map((comment) => (
-            <div className="flex items-center space-x-2 mb-2">
+            <div
+              key={comment.data().id}
+              className="flex items-center space-x-2 mb-2"
+            >
               <img
                 className="h-7 rounded-full object-cover "
                 src={comment.data().userImage}
