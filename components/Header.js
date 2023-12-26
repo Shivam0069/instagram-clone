@@ -95,7 +95,7 @@ export default function Header() {
               />
             </>
           ) : (
-            <button onClick={signIn}>Sign in</button>
+            <button onClick={()=>router.push('/auth/signin')}>Sign in</button>
           )}
         </div>
       </div>
