@@ -41,9 +41,9 @@ export default NextAuth({
     // ...add more providers here
   ],
   secret: process.env.SECRET,
-  pages: {
-    signIn: "/auth/signin",
-  },
+  // pages: {
+  //   signIn: "/auth/signin",
+  // },
 
   callbacks: {
     async session({ session, token, user }) {
