@@ -1,13 +1,39 @@
 import Image from "next/legacy/image";
-import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import React, { useEffect } from "react";
+// import { useSession, signIn, signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
-import { modalState } from "../pages/_app";
+import { modalState, userState } from "../pages/_app";
 import { useRouter } from "next/router";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase";
+
 export default function Header() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const [isOpen, setIsOpen] = useRecoilState(modalState);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
   const router = useRouter();
+  const auth = getAuth();
+  useEffect(() => {
+    
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const fetchUser = async () => {
+          const docRef = doc(db, "users", user.auth.currentUser.providerData[0].uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setCurrentUser(docSnap.data());
+            console.log(currentUser);
+          }
+        };
+        fetchUser();
+      }
+    });
+  }, []);
+  function onSignOut() {
+    signOut(auth);
+    setCurrentUser(null);
+  }
 
   return (
     <div className="sticky top-0  bg-white shadow-sm border-b z-30">
@@ -69,7 +95,7 @@ export default function Header() {
             <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
             <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
           </svg>
-          {session ? (
+          {currentUser ? (
             <>
               <svg
                 onClick={() => setIsOpen((prev) => !prev)}
@@ -88,14 +114,14 @@ export default function Header() {
                 />
               </svg>
               <img
-                onClick={signOut}
-                src={session.user.image}
+                onClick={onSignOut}
+                src={currentUser?.userImg}
                 alt="user-image"
                 className="h-10 rounded-full cursor-pointer"
               />
             </>
           ) : (
-            <button onClick={()=>router.push('/auth/signin')}>Sign in</button>
+            <button onClick={() => router.push("/auth/signin")}>Sign in</button>
           )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { modalState } from "../pages/_app";
+import { modalState, userState } from "../pages/_app";
 import { useRecoilState } from "recoil";
 import Modal from "react-modal";
 import {
@@ -13,12 +13,13 @@ import { db, storage } from "@/firebase";
 import { useSession } from "next-auth/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 export default function UploadModal() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const filePickerRef = useRef(null);
   const captionRef = useRef(null);
   const [isOpen, setIsOpen] = useRecoilState(modalState);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
 
   function addImageToPost(e) {
     const reader = new FileReader();
@@ -35,8 +36,8 @@ export default function UploadModal() {
     setLoading(true);
     const docRef = await addDoc(collection(db, "posts"), {
       caption: captionRef.current.value,
-      username: session.user.username,
-      profileImg: session.user.image,
+      username: currentUser?.username,
+      profileImg: currentUser?.userImg,
       timestamp: serverTimestamp(),
     });
 
