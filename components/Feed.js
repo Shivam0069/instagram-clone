@@ -4,13 +4,16 @@ import Posts from "./Posts";
 import MiniProfile from "./MiniProfile";
 import Suggestions from "./Suggestions";
 import { useSession, signOut } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { userState } from "@/pages/_app";
 
 export default function Feed() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
   return (
     <main
       className={`grid  ${
-        session
+        currentUser
           ? "grid-cols-1 md:grid-cols-3 md:max-w-6xl mx-auto"
           : "grid-cols-1 md:grid-cols-2 md:max-w-3xl mx-auto"
       }`}
@@ -21,7 +24,7 @@ export default function Feed() {
         {/* Posts */}
         <Posts />
       </section>
-      {session && (
+      {currentUser && (
         <section className="hidden md:inline-grid md:col-span-1">
           <div className="fixed w-[380px]">
             {/* Mini Profile */}

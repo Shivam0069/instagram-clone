@@ -4,9 +4,13 @@ import minifaker from "minifaker";
 import "minifaker/locales/en";
 import Story from "./Story";
 import { useSession } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { userState } from "@/pages/_app";
 export default function Stories() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const [storyUsers, setStoryUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
+
   useEffect(() => {
     const storyUsers = minifaker.array(20, (i) => ({
       username: minifaker.username({ locale: "en" }).toLowerCase(),
@@ -17,10 +21,10 @@ export default function Stories() {
   }, []);
   return (
     <div className="flex space-x-2 p-6 bg-white mt-8  border-gray-200 border overflow-x-scroll rounded-sm scrollbar-none">
-      {session && (
+      {currentUser && (
         <Story
-          img={session.user.image}
-          username={session.user.username}
+          img={currentUser?.userImg}
+          username={currentUser?.username}
           isUser="true"
         />
       )}
